@@ -4,3 +4,6 @@
 .DS_Store
 .vscode
 .idea
+
+# production
+src/main.exe
