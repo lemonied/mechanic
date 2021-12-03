@@ -55,3 +55,29 @@ TapStr tapString
 func TapStr(str string) {
   robotgo.TypeStr(str)
 }
+
+/*
+Bitmap Image data
+*/
+type Bitmap struct {
+  Width int
+  Height int
+  Data []byte
+}
+/*
+Screenshot get screenshot
+*/
+func Screenshot() *Bitmap {
+  ss := robotgo.CaptureScreen(0)
+  data := robotgo.ToBitmapBytes(ss)
+	image := robotgo.ToImage(ss)
+	bounds := image.Bounds()
+	width := bounds.Max.X - bounds.Min.X - 1
+  height := bounds.Max.Y - bounds.Min.Y - 1
+  defer robotgo.FreeBitmap(ss)
+  return &Bitmap{
+    Width: width,
+    Height: height,
+    Data: data,
+  }
+}

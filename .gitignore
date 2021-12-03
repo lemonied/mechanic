@@ -5,5 +5,7 @@
 .vscode
 .idea
 
+node_modules
+
 # production
-src/main.exe
+/output

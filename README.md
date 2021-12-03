@@ -2,24 +2,20 @@
 ## manifest
 ```bash
 # https://github.com/akavel/rsrc
-rsrc -manifest ./main.manifest -ico ./src/assets/favicon.ico -o ./src/main.syso
+rsrc -manifest ./main.manifest -ico ./assets/favicon.ico -o ./main.syso
 ```
 
-## assets
+## robot
 ```bash
-# https://github.com/go-bindata/go-bindata/
-go get -u github.com/go-bindata/go-bindata/...
-cd src
-go-bindata -o file/assets.go -pkg=assets ./assets
+# https://github.com/go-vgo/robotgo#installation
 ```
 
 ## development
 ```bash
-cd src
-go build -o ./main.exe && ./main.exe
+go run main.go
 ```
 
 ## build
 ```bash
-go build -ldflags="-H windowsgui" ./src/main.go
+go build
 ```
