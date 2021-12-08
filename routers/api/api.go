@@ -14,4 +14,5 @@ func Register(r *gin.Engine) {
 	apiGroup := r.Group("/api")
 	apiGroup.GET("/time", apitime.Get)
 	apiGroup.GET("/screenshot", graphics.Get)
+	apiGroup.POST("/compare", graphics.ComparePost)
 }

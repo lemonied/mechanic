@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/go-vgo/robotgo v0.100.9
-	github.com/robotn/gohook v0.31.3
+	github.com/robotn/gohook v0.31.3 // indirect
 	gocv.io/x/gocv v0.29.0
 )
 
