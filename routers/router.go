@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"mechanic/models"
 	"mechanic/routers/api"
 
 	"os"
@@ -22,16 +21,6 @@ func Register(r *gin.Engine) {
 		r.StaticFile("/favicon.ico", path.Join(staticRoot, "./favicon.ico"))
 		r.NoRoute(func(c *gin.Context) {
 			c.File(path.Join(staticRoot, "./index.html"))
-		})
-		r.Use(func(c *gin.Context) {
-			c.Next()
-			if length := len(c.Errors); length > 0 {
-				e := c.Errors[length-1]
-				err := e.Err
-				if err != nil {
-					c.JSON(models.MakeResponse(0, err))
-				}
-			}
 		})
 	}
 }

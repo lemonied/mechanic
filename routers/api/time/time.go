@@ -1,7 +1,6 @@
 package apitime
 
 import (
-	"mechanic/models"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +9,6 @@ import (
 /*
 Get get server time
 */
-func Get(ctx *gin.Context) {
-	ctx.JSON(models.MakeResponse(1, time.Now()))
+func Get(ctx *gin.Context) (int, interface{}) {
+	return 1, time.Now()
 }

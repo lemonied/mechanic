@@ -1,9 +1,7 @@
 package graphics
 
 import (
-	"mechanic/models"
 	"mechanic/pkg/picture"
-	"mechanic/pkg/robot"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,15 +9,14 @@ import (
 /*
 Get screenshot
 */
-func Get(ctx *gin.Context) {
-	ss := robot.Screenshot()
+func Get(ctx *gin.Context) (int, interface{}) {
+	ss := picture.Screenshot()
 	b64, err := picture.ToBase64(ss.Image)
 	if err == nil {
-		ctx.JSON(models.MakeResponse(1, map[string]interface{}{
+		return 1,  map[string]interface{}{
 			"id": ss.ID,
 			"base64": b64,
-		}))
-	} else {
-		ctx.JSON(models.MakeResponse(0, err))
+		}
 	}
+	return 0, err
 }
