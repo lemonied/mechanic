@@ -25,7 +25,7 @@ func ToBase64(image image.Image) (string, error) {
 /*
 
 */
-func toGrayscale(img image.Image) {
+func toGrayscale(img image.Image) image.Gray {
 	bounds := img.Bounds()
 	gray := image.NewGray(bounds)
 	for x := bounds.Min.X; x < bounds.Max.X; x++ {
@@ -33,6 +33,7 @@ func toGrayscale(img image.Image) {
 			gray.Set(x, y, img.At(x, y));
 		}
 	}
+	return *gray
 }
 
 /*
@@ -60,13 +61,13 @@ hashType: phash | average | blockmean0 | blockmean1 | colormoment | marrhildreth
 */
 func Compare(source image.Image, target image.Image, hashType string) (float64, error) {
 
-	mat1, err1 := gocv.ImageToMatRGBA(source)
+	mat1, err1 := gocv.ImageToMatRGB(source)
 	defer mat1.Close()
 	if err1 != nil {
 		return 0, err1
 	}
 	
-	mat2, err2 := gocv.ImageToMatRGBA(target)
+	mat2, err2 := gocv.ImageToMatRGB(target)
 	defer mat2.Close()
 	if err2 != nil {
 		return 0, err2
@@ -155,4 +156,22 @@ func FindImageMat(source, temp gocv.Mat, matchMode gocv.TemplateMatchMode) Match
 	minVal, maxVal, minLoc, maxLoc := gocv.MinMaxLoc(res)
 
 	return MatchValue{minVal, maxVal, minLoc, maxLoc}
+}
+
+/*
+Normalized normalized
+*/
+func Normalized(source image.Image) (gocv.Mat, error) {
+	imgGray := toGrayscale(source)
+	srcMat, err := gocv.ImageGrayToMatGray(&imgGray)
+	defer srcMat.Close()
+	targetMat := gocv.NewMat()
+	defer targetMat.Close()
+	if err != nil {
+		return targetMat, err
+	}
+	
+	gocv.Threshold(srcMat, &targetMat, 200, 255, gocv.ThresholdBinaryInv)
+
+	return targetMat, nil
 }

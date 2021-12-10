@@ -17,4 +17,5 @@ func Register(r *gin.Engine) {
 	apiGroup.GET("/screenshot", utils.MakeJSON(graphics.Get))
 	apiGroup.POST("/compare", utils.MakeJSON(graphics.ComparePost))
 	apiGroup.POST("/find", utils.MakeJSON(graphics.SearchPost))
+	apiGroup.POST("/recognition", utils.MakeJSON(graphics.NumberRecognition))
 }
