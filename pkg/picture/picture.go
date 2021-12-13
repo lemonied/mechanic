@@ -23,9 +23,9 @@ func ToBase64(image image.Image) (string, error) {
 }
 
 /*
-
+ToGrayscale grayscale
 */
-func toGrayscale(img image.Image) image.Gray {
+func ToGrayscale(img image.Image) image.Gray {
 	bounds := img.Bounds()
 	gray := image.NewGray(bounds)
 	for x := bounds.Min.X; x < bounds.Max.X; x++ {
@@ -34,6 +34,13 @@ func toGrayscale(img image.Image) image.Gray {
 		}
 	}
 	return *gray
+}
+/*
+ToGrayscaleMat grayscale mat
+*/
+func ToGrayscaleMat(img image.Image) (gocv.Mat, error) {
+	grayscale := ToGrayscale(img)
+	return gocv.ImageGrayToMatGray(&grayscale)
 }
 
 /*
@@ -125,21 +132,33 @@ type MatchValue struct {
 	MaxLoc image.Point
 }
 /*
+ImageMatchResult MatchTemplate returned value
+*/
+type ImageMatchResult struct {
+	MatchValue
+	Width int
+	Height int
+}
+/*
 FindImage find image
 */
-func FindImage(source, temp image.Image, matchMode gocv.TemplateMatchMode) (MatchValue, error) {
+func FindImage(source, temp image.Image, matchMode gocv.TemplateMatchMode) (ImageMatchResult, error) {
 	mat1, err1 := gocv.ImageToMatRGB(source)
 	defer mat1.Close()
 	if err1 != nil {
-		return MatchValue{}, err1
+		return ImageMatchResult{}, err1
 	}
 	
 	mat2, err2 := gocv.ImageToMatRGB(temp)
 	defer mat2.Close()
 	if err2 != nil {
-		return MatchValue{}, err2
+		return ImageMatchResult{}, err2
 	}
-	return FindImageMat(mat1, mat2, matchMode), nil
+	return ImageMatchResult{
+		FindImageMat(mat1, mat2, matchMode),
+		temp.Bounds().Max.X - temp.Bounds().Min.X,
+		temp.Bounds().Max.Y - temp.Bounds().Min.Y,
+	}, nil
 }
 /*
 FindImageMat find image
@@ -161,17 +180,27 @@ func FindImageMat(source, temp gocv.Mat, matchMode gocv.TemplateMatchMode) Match
 /*
 Normalized normalized
 */
-func Normalized(source image.Image) (gocv.Mat, error) {
-	imgGray := toGrayscale(source)
+func Normalized(source image.Image, threshold float32) (gocv.Mat, error) {
+	imgGray := ToGrayscale(source)
 	srcMat, err := gocv.ImageGrayToMatGray(&imgGray)
 	defer srcMat.Close()
 	targetMat := gocv.NewMat()
-	defer targetMat.Close()
 	if err != nil {
 		return targetMat, err
 	}
 	
-	gocv.Threshold(srcMat, &targetMat, 200, 255, gocv.ThresholdBinaryInv)
+	gocv.Threshold(srcMat, &targetMat, threshold, 255, gocv.ThresholdBinaryInv)
 
 	return targetMat, nil
+}
+
+/*
+Contour contour
+*/
+func Contour(source image.Image, mode gocv.RetrievalMode, method gocv.ContourApproximationMode) (gocv.PointsVector, error) {
+	mat, err := gocv.ImageToMatRGB(source)
+	if err != nil {
+		return gocv.PointsVector{}, err
+	}
+	return gocv.FindContours(mat, mode, method), nil
 }

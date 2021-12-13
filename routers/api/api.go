@@ -18,4 +18,8 @@ func Register(r *gin.Engine) {
 	apiGroup.POST("/compare", utils.MakeJSON(graphics.ComparePost))
 	apiGroup.POST("/find", utils.MakeJSON(graphics.SearchPost))
 	apiGroup.POST("/recognition", utils.MakeJSON(graphics.NumberRecognition))
+	apiGroup.POST("/normalized", utils.MakeJSON(graphics.NormalizedPost))
+	apiGroup.POST("/bilateral", utils.MakeJSON(graphics.BilateralFilter))
+	apiGroup.POST("/canny", utils.MakeJSON(graphics.Canny))
+	apiGroup.POST("/contours", utils.MakeJSON(graphics.ContourPost))
 }

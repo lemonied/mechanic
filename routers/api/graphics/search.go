@@ -68,10 +68,8 @@ func SearchPost(ctx *gin.Context) (int, interface{}) {
 	}
 	blue := color.RGBA{0, 0, 255, 1}
 	green := color.RGBA{0, 255, 0, 1}
-	tempWidth := images[1].Bounds().Max.X - images[1].Bounds().Min.X
-	tempHeight := images[1].Bounds().Max.Y - images[1].Bounds().Min.Y
-	minRect := image.Rectangle{result.MinLoc, image.Point{result.MinLoc.X + tempWidth, result.MinLoc.Y + tempHeight}}
-	maxRect := image.Rectangle{result.MaxLoc, image.Point{result.MaxLoc.X + tempWidth, result.MaxLoc.Y + tempHeight}}
+	minRect := image.Rectangle{result.MinLoc, image.Point{result.MinLoc.X + result.Width, result.MinLoc.Y + result.Height}}
+	maxRect := image.Rectangle{result.MaxLoc, image.Point{result.MaxLoc.X + result.Width, result.MaxLoc.Y + result.Height}}
 	gocv.Rectangle(&mat, minRect, green, 3)
 	gocv.Rectangle(&mat, maxRect, blue, 3)
 	resultImg, err := mat.ToImage()
